@@ -6,6 +6,7 @@ import { z } from "zod";
 import { timingSafeEqual } from "node:crypto";
 import { GmailService } from "./gmail-service.js";
 import { TokenStore } from "./token-store.js";
+import { legalRouter } from "./legal.js";
 
 // ---------------------------------------------------------------------------
 // Config
@@ -457,6 +458,9 @@ function createMcpServer(): McpServer {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Public pages for Google's OAuth consent screen (no auth, no token store).
+app.use(legalRouter);
 
 // Serverless instances do not share memory, so read the accounts fresh.
 app.use(async (_req, _res, next) => {
